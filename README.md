@@ -18,8 +18,8 @@ Advantages over YubiSwitch:
 How to use:
 - Download script. Run it or better even make it startup application.
 - Install zmq: sudo pip install zmq
-- Bind the following command to key combination of your choice (e.g. Super + y):  
-m="ENABLE" && echo -e $(printf '\\x01\\x00\\x%02x\\x00%s' $(( ${#m})) "$m") | nc -q1 localhost 5555
+- Bind the triggering script YubiGuard_trigger.sh command to key combination of your choice (e.g. Super + y):  
+(Note for some reason it might be neccessary to specify your shell within the shebang. For example .../bash instead of .../sh.)
 - Triggering the script will unblock YubiKey. After activation of your YubiKey or after timeout, YubiKey output will again be blocked. 
 
 
