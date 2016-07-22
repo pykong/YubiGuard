@@ -1,6 +1,8 @@
 # YubiGuard
-Most recent version: 0.1
+
 Python script to prevent accidental triggering of YubiKeys on Linux.
+
+Most recent version: 0.1
 
 The script uses the xinput command to identify and control the output of YubiKeys:
 xinput list
