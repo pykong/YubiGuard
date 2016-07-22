@@ -1,4 +1,5 @@
-# YubiGuard - Version 0.1
+# YubiGuard
+Most recent version: 0.1
 Python script to prevent accidental triggering of YubiKeys on Linux.
 
 The script uses the xinput command to identify and control the output of YubiKeys:
@@ -7,15 +8,15 @@ xinput --enable <id>
 xinput --disable <id>
 
 
-Advantages over YubiSwitch:
-- No root privilege required to run!
-- No unintended output release after reactivation, if you pressed your YubiKey while blocked!
-- Can handle more than one YubiKey.
-- Timeout which locks off YubiKey after 5 seconds.
-- Automatically locking after YubiKey has been triggered.
-- Shows notifications to inform about activation status of YubiKey(s).
+## Advantages over YubiSwitch:
+1. No root privilege required to run!
+2. No unintended output release after reactivation, if you pressed your YubiKey while blocked!
+3. Can handle more than one YubiKey.
+4. Timeout which locks off YubiKey after 5 seconds.
+5. Automatically locking after YubiKey has been triggered.
+6. Shows notifications to inform about activation status of YubiKey(s).
 
-How to use:
+## How to use:
 - Download script. Run it or better even make it startup application.
 - Install zmq: sudo pip install zmq
 - Bind the triggering script YubiGuard_trigger.sh command to key combination of your choice (e.g. Super + y):  
@@ -23,17 +24,17 @@ How to use:
 - Triggering the script will unblock YubiKey. After activation of your YubiKey or after timeout, YubiKey output will again be blocked. 
 
 
-Tested on:
+## Tested on:
 - Xubuntu 15.10 (Wily Werewolf)
 
-FAQ:
-Q: The LED of my YubiKey is still active. Does this mean the script is not working?
-A: No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
+## FAQ:
+_Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
+_A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
-Known or potential bugs:
+## Known or potential bugs:
 - Script does not yet come with handling of exit procedure, hence any changes of xinput will remain after the script's execution.
 - Potentially adding USB devices or relocating them to a different port my change their xinput id, thereby rendering them potentially blocked.
 
 
-Planned:
-- add panel icon to show activation status and allow switching ON/OFF via mouse click. 
+## To Do:
+- add panel icon to show activation status and allow switching ON/OFF via mouse click.
