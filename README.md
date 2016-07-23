@@ -28,6 +28,7 @@ xinput --disable <id>
 
 ## Tested on:
 - Xubuntu 15.10 (Wily Werewolf)
+- Xubuntu 16.04 (Xenial Xerus)
 
 ## FAQ:
 _Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
