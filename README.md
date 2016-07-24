@@ -36,11 +36,6 @@ _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as in
 
 ## Known or potential bugs:
 - Script does not yet come with handling of exit procedure, hence any changes of xinput will remain after the script's execution.
-- Potentially adding USB devices or relocating them to a different port my change their xinput id, thereby rendering them potentially blocked.
-
-
-## To Do:
-- add panel icon to show activation status and allow switching ON/OFF via mouse click.
 
 ## Changelog:
 ### v 0.2:
