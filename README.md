@@ -1,4 +1,4 @@
-# YubiGuard
+# YubiLock
 
 Python script to prevent accidental triggering of YubiKeys on Linux.
 
@@ -21,7 +21,7 @@ xinput --disable <id>
 ## How to use:
 - Download script. Run it or better even make it startup application.
 - Install zmq: sudo pip install zmq
-- Bind the triggering script YubiGuard_trigger.sh command to key combination of your choice (e.g. Super + y):  
+- Bind the triggering script trigger_YL.sh command to key combination of your choice (e.g. Super + y):  
 (Note for some reason it might be neccessary to specify your shell within the shebang. For example .../bash instead of .../sh.)
 - Triggering the script will unblock YubiKey. After activation of your YubiKey or after timeout, YubiKey output will again be blocked. 
 
@@ -41,3 +41,9 @@ _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as in
 
 ## To Do:
 - add panel icon to show activation status and allow switching ON/OFF via mouse click.
+
+## Changelog:
+### v 0.2:
+- renamed to YubiLock, as this name better portrays the function
+- instead of text notificaions, now descriptive icons are displayed
+- in case of changing xinput ids (e.g. devices are switched) old ids will be automatically activated
