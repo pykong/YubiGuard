@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiLock VERSION 0.2
+# YubiLock VERSION 0.3
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 #
@@ -15,6 +15,13 @@ import time
 import threading
 import Queue
 import zmq
+
+
+
+# change working dir to that of script:
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 
 # static methods:
@@ -72,7 +79,7 @@ class YubiLock:
         gi_thread.start()
 
         # disable as default state
-        time.sleep(.3)
+        time.sleep(.1)
         if self.yubi_id_l:
             self.disable()
 
@@ -81,6 +88,10 @@ class YubiLock:
 
         lis_thread = threading.Thread(target=self.listener)
         lis_thread.start()
+
+        en_thread = threading.Thread(target=self.enable())
+        en_thread.start()
+
 
     def get_ids(self):
         old_id_l = []
@@ -109,21 +120,22 @@ class YubiLock:
             time.sleep(0.5)
 
     def enable(self):
-        if self.yubi_id_l:
-            for yubi_id in self.yubi_id_l:
-                on_cmd = "xinput --enable {}".format(yubi_id)
-                shell(on_cmd)
-            self.active = True
-            self.timestamp = time.time()  # setting timeout
+        while True:
+            if self.active and self.yubi_id_l:
+                for yubi_id in self.yubi_id_l:
+                    on_cmd = "xinput --enable {}".format(yubi_id)
+                    shell(on_cmd)
+                self.active = True
+                self.timestamp = time.time()  # setting timeout
 
-            on_msg = "YubiKey(s) enabled."
-            print(on_msg)
-            notify(self.on_icon)
+                on_msg = "YubiKey(s) enabled."
+                print(on_msg)
+                notify(self.on_icon)
 
-            # monitor input from YubiKey
-            mon_thread = threading.Thread(target=self.yubikey_monitor)
-            mon_thread.start()
-            mon_thread.join()
+                # monitor input from YubiKey
+                mon_thread = threading.Thread(target=self.yubikey_monitor)
+                mon_thread.start()
+                mon_thread.join()
 
     def disable(self):
         if not self.lock:
@@ -178,13 +190,16 @@ class YubiLock:
         s.bind(url)
         while True:
             try:
-                msg = s.recv(zmq.NOBLOCK)  # note NOBLOCK here
+                msg = s.recv(zmq.NOBLOCK) # note NOBLOCK here
             except zmq.Again:
                 # no message to recv, do other things
                 time.sleep(0.01)
             else:
                 if msg == 'ENABLE' and not self.active:  # trigger only if not already active
-                    self.enable()
+                    self.active = True
+
+                elif self.active:
+                    print('Already active.')
 
 
 if __name__ == "__main__":
