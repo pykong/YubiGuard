@@ -79,7 +79,7 @@ class YubiLock:
         gi_thread.start()
 
         # disable as default state
-        time.sleep(.1)
+        time.sleep(.3)
         if self.yubi_id_l:
             self.disable()
 
