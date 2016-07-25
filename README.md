@@ -2,7 +2,7 @@
 
 Python script to prevent accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.3
+Most recent version: 0.4
 
 The script uses the xinput command to identify and control the output of YubiKeys:
 xinput list
@@ -34,9 +34,6 @@ xinput --disable <id>
 _Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
 _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
-## Known or potential bugs:
-- Script does not yet come with handling of exit procedure, hence any changes of xinput will remain after the script's execution.
-
 ## Changelog:
 ### v 0.2:
 - renamed to YubiLock, as this name better portrays the function
@@ -47,3 +44,6 @@ _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as in
 - beautified icons
 - set working dir, to always allow relative import of icons
 - now preventing overtriggering when hitting key combinations in short succession
+
+### v 0.4
+- added exit handler, which will reactivate YubiKeys after script has exited
