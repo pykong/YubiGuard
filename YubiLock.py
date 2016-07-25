@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiLock VERSION 0.3
+# YubiLock VERSION 0.4
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 #
@@ -15,13 +15,13 @@ import time
 import threading
 import Queue
 import zmq
-
+import sys
 
 
 # change working dir to that of script:
 abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
+d_name = os.path.dirname(abspath)
+os.chdir(d_name)
 
 
 # static methods:
@@ -67,36 +67,48 @@ class AsynchronousFileReader(threading.Thread):
 class YubiLock:
     def __init__(self):
         self.yubi_id_l = []
+        self.running = True  # keeps while loops running
         self.active = False  # ON/OFF master variable
-        self.lock = False  # for preventing disabling Ybikey during write process        
+        self.lock = False  # for preventing disabling YubiKey during write process
         self.timestamp = 0  # activated since ...
 
+        # icons:
         self.on_icon = os.path.abspath("./icons/on_icon.svg")
         self.off_icon = os.path.abspath("./icons/off_icon.svg")
 
-        # start threads
-        gi_thread = threading.Thread(target=self.get_ids)
-        gi_thread.start()
+        # starting threads:
+        try:
+            gi_thread = threading.Thread(target=self.get_ids)
+            gi_thread.start()
 
-        # disable as default state
-        time.sleep(.3)
-        if self.yubi_id_l:
-            self.disable()
+            # disable as default state
+            for t in range(300):
+                if self.yubi_id_l:
+                    self.disable()
+                    break
+                else:
+                    time.sleep(.01)
 
-        to_thread = threading.Thread(target=self.timeout)
-        to_thread.start()
+            to_thread = threading.Thread(target=self.timeout)
+            to_thread.start()
 
-        lis_thread = threading.Thread(target=self.listener)
-        lis_thread.start()
+            lis_thread = threading.Thread(target=self.listener)
+            lis_thread.start()
 
-        en_thread = threading.Thread(target=self.enable())
-        en_thread.start()
+            while self.running:
+                self.enable()
 
+        except (KeyboardInterrupt, SystemExit):
+            self.cleanup()
+        finally:
+            to_thread.join()
+            lis_thread.join()
+            sys.exit(0)
 
     def get_ids(self):
         old_id_l = []
-        while True:
-            # reenabling old slots in case of change:
+        while self.running:
+            # re-enabling old slots in case of change:
             if old_id_l != self.yubi_id_l:
                 for old_id in old_id_l:
                     on_cmd = "xinput --enable {}".format(old_id)
@@ -120,19 +132,19 @@ class YubiLock:
             time.sleep(0.5)
 
     def enable(self):
-        while True:
-            if self.active and self.yubi_id_l:
-                for yubi_id in self.yubi_id_l:
-                    on_cmd = "xinput --enable {}".format(yubi_id)
-                    shell(on_cmd)
-                self.active = True
-                self.timestamp = time.time()  # setting timeout
+        if self.active and self.yubi_id_l:
+            for yubi_id in self.yubi_id_l:
+                on_cmd = "xinput --enable {}".format(yubi_id)
+                shell(on_cmd)
+            self.active = True
+            self.timestamp = time.time()  # setting timeout
 
-                on_msg = "YubiKey(s) enabled."
-                print(on_msg)
-                notify(self.on_icon)
+            on_msg = "YubiKey(s) enabled."
+            print(on_msg)
+            notify(self.on_icon)
 
-                # monitor input from YubiKey
+            # monitor input from YubiKey
+            if self.running:
                 mon_thread = threading.Thread(target=self.yubikey_monitor)
                 mon_thread.start()
                 mon_thread.join()
@@ -150,7 +162,7 @@ class YubiLock:
             self.active = False
 
     def timeout(self):
-        while True:
+        while self.running:
             if time.time() - self.timestamp > 5 and self.active:
                 print('Timeout. Now disabling.')
                 self.disable()
@@ -170,7 +182,7 @@ class YubiLock:
 
         while not stdout_reader.eof and self.active:
             while not stdout_queue.empty():
-                print stdout_queue.get()  # emptying queue
+                stdout_queue.get()  # emptying queue
                 self.lock = True
                 time.sleep(.01)
             if self.lock:
@@ -188,7 +200,7 @@ class YubiLock:
         s = ctx.socket(zmq.PULL)
         url = 'tcp://127.0.0.1:5555'
         s.bind(url)
-        while True:
+        while self.running:
             try:
                 msg = s.recv(zmq.NOBLOCK) # note NOBLOCK here
             except zmq.Again:
@@ -200,6 +212,12 @@ class YubiLock:
 
                 elif self.active:
                     print('Already active.')
+
+    def cleanup(self):
+        print('Cleaning up and exiting gracefully.')
+        self.running = False  # deactivate all loops
+        self.active = True
+        self.enable()
 
 
 if __name__ == "__main__":
