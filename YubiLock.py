@@ -202,7 +202,7 @@ class YubiLock:
         s.bind(url)
         while self.running:
             try:
-                msg = s.recv(zmq.NOBLOCK) # note NOBLOCK here
+                msg = s.recv(zmq.NOBLOCK)  # note NOBLOCK here
             except zmq.Again:
                 # no message to recv, do other things
                 time.sleep(0.01)
