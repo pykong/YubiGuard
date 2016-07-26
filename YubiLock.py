@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiLock VERSION 0.4
+# YubiLock VERSION 0.5
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 #
