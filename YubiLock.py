@@ -69,7 +69,7 @@ class YubiLock:
         self.yubi_id_l = []
         self.running = True  # keeps while loops alive
         self.active = False  # ON/OFF master flag
-        self.timeout = 2  # timeout in seconds
+        self.timeout = 5  # timeout in seconds
 
         self.lock = threading.Lock()
 
