@@ -67,111 +67,94 @@ class AsynchronousFileReader(threading.Thread):
 class YubiLock:
     def __init__(self):
         self.yubi_id_l = []
-        self.running = True  # keeps while loops running
-        self.active = False  # ON/OFF master variable
-        self.lock = False  # for preventing disabling YubiKey during write process
-        self.timestamp = 0  # activated since ...
+        self.running = True  # keeps while loops alive
+        self.active = False  # ON/OFF master flag
+        self.timeout = 2  # timeout in seconds
+
+        self.lock = threading.Lock()
 
         # icons:
         self.on_icon = os.path.abspath("./icons/on_icon.svg")
         self.off_icon = os.path.abspath("./icons/off_icon.svg")
 
-        # starting threads:
+        # starting threads and catching exceptions:
+        gi_thread = threading.Thread(target=self.get_ids)
+        cs_thread = threading.Thread(target=self.change_state)
+
         try:
-            gi_thread = threading.Thread(target=self.get_ids)
             gi_thread.start()
+            cs_thread.start()
 
-            # disable as default state
-            for t in range(300):
-                if self.yubi_id_l:
-                    self.disable()
-                    break
-                else:
-                    time.sleep(.01)
-
-            to_thread = threading.Thread(target=self.timeout)
-            to_thread.start()
-
-            lis_thread = threading.Thread(target=self.listener)
-            lis_thread.start()
-
-            while self.running:
-                self.enable()
+            # setting listening for input as main loop
+            self.listener()
 
         except (KeyboardInterrupt, SystemExit):
             self.cleanup()
         finally:
-            to_thread.join()
-            lis_thread.join()
+            gi_thread.join()
+            cs_thread.join()
             sys.exit(0)
 
     def get_ids(self):
-        old_id_l = []
+        gi_l = []  # local list of this method
         while self.running:
-            # re-enabling old slots in case of change:
-            if old_id_l != self.yubi_id_l:
-                for old_id in old_id_l:
-                    on_cmd = "xinput --enable {}".format(old_id)
-                    shell(on_cmd)
+            with self.lock:
+                del gi_l[:]  # emptying list
 
-            del self.yubi_id_l[:]  # emptying list
+                pat = re.compile(r"(?:Yubikey.*?id=)(\d+)", re.IGNORECASE)
 
-            pat = re.compile(r"(?:Yubikey.*?id=)(\d+)", re.IGNORECASE)
+                list_cmd = 'xinput list'
+                xinput = shell(list_cmd)
 
-            list_cmd = 'xinput list'
-            xinput = shell(list_cmd)
+                for line in xinput.stdout:
+                    match = re.search(pat, line)
+                    if match:
+                        yubi_id = match.groups()
+                        gi_l.extend(yubi_id)
 
-            for line in xinput.stdout:
-                match = re.search(pat, line)
-                if match:
-                    yubi_id = match.groups()
-                    self.yubi_id_l.extend(yubi_id)
+                self.yubi_id_l = gi_l  # making available to class
 
-            old_id_l = self.yubi_id_l
+            time.sleep(.1)
 
-            time.sleep(0.5)
-
-    def enable(self):
-        if self.active and self.yubi_id_l:
-            for yubi_id in self.yubi_id_l:
-                on_cmd = "xinput --enable {}".format(yubi_id)
-                shell(on_cmd)
-            self.active = True
-            self.timestamp = time.time()  # setting timeout
-
+    def switch(self, state, id_l):
+        print 'switch - id_l: ', id_l
+        cmd_arg = ""
+        if state == 'ON':
+            cmd_arg = "--enable"
             on_msg = "YubiKey(s) enabled."
             print(on_msg)
             notify(self.on_icon)
-
-            # monitor input from YubiKey
-            if self.running:
-                mon_thread = threading.Thread(target=self.yubikey_monitor)
-                mon_thread.start()
-                mon_thread.join()
-
-    def disable(self):
-        if not self.lock:
-            for yubi_id in self.yubi_id_l:
-                print 'disabling: ', yubi_id
-                off_cmd = "xinput --disable {}".format(yubi_id)
-                shell(off_cmd)
-
+        elif state == 'OFF':
+            cmd_arg = "--disable"
             off_msg = "YubiKey(s) disabled."
             print(off_msg)
             notify(self.off_icon)
-            self.active = False
 
-    def timeout(self):
+        for id_item in id_l:
+            on_cmd = "xinput {} {}".format(cmd_arg, id_item)
+            shell(on_cmd)
+
+    def change_state(self):
+        lock = False
         while self.running:
-            if time.time() - self.timestamp > 5 and self.active:
-                print('Timeout. Now disabling.')
-                self.disable()
-            time.sleep(.1)
+            with self.lock:
+                if self.yubi_id_l:
+                    if self.active:
+                        self.switch('ON', self.yubi_id_l)
+                        mon_thread = threading.Thread(target=self.yubikey_monitor, args=(self.yubi_id_l,))
+                        mon_thread.start()
+                        mon_thread.join()
+                        lock = False
+                    elif not self.active and not lock:
+                        self.switch('OFF', self.yubi_id_l)
+                        lock = True
 
-    def yubikey_monitor(self):
+            time.sleep(.01)
+
+    def yubikey_monitor(self, mon_l):
         # forming command to run parallel monitoring processes
         mon_cmd = "xinput test {}"
-        multi_mon_cmd = ' & '.join([mon_cmd.format(y_id) for y_id in self.yubi_id_l])
+        multi_mon_cmd = ' & '.join([mon_cmd.format(y_id) for y_id in mon_l])
 
         monitor = shell(multi_mon_cmd)
 
@@ -180,19 +163,22 @@ class YubiLock:
         stdout_reader = AsynchronousFileReader(monitor.stdout, stdout_queue)
         stdout_reader.start()
 
-        while not stdout_reader.eof and self.active:
+        triggered = False
+        timestamp = time.time()
+        while not stdout_reader.eof and time.time() - timestamp < self.timeout:
             while not stdout_queue.empty():
                 stdout_queue.get()  # emptying queue
-                self.lock = True
+                triggered = True
                 time.sleep(.01)
-            if self.lock:
+            if triggered:
                 print('Yubikey triggered. Now disabling.')
-                self.lock = False  # release lock
-                self.disable()
                 break
+
+            time.sleep(.01)
 
         monitor.kill()
         stdout_reader.join()
+        self.active = False
 
     def listener(self):
         """ Listens for triggering through zmq message."""
@@ -210,14 +196,11 @@ class YubiLock:
                 if msg == 'ENABLE' and not self.active:  # trigger only if not already active
                     self.active = True
 
-                elif self.active:
-                    print('Already active.')
-
     def cleanup(self):
         print('Cleaning up and exiting gracefully.')
         self.running = False  # deactivate all loops
         self.active = True
-        self.enable()
+        self.switch('ON', self.yubi_id_l)
 
 
 if __name__ == "__main__":
