@@ -5,9 +5,10 @@ Python script to prevent accidental triggering of YubiKeys on Linux.
 Most recent version: 0.6
 
 The script uses the xinput command to identify and control the output of YubiKeys:
-xinput list
-xinput --enable <id>
-xinput --disable <id>
+- xinput list
+- xinput --enable <id>
+- xinput --disable <id>
+
 
 
 ## Advantages over YubiSwitch:
@@ -16,14 +17,13 @@ xinput --disable <id>
 3. Can handle more than one YubiKey.
 4. Timeout which locks off YubiKey after 5 seconds.
 5. Automatically locking after YubiKey has been triggered.
-6. Shows notifications to inform about activation status of YubiKey(s).
+6. Visual indicating the activation status of YubiKey(s).
 
 ## How to use:
 - Download script. Run it or better even make it startup application.
 - Install zmq: sudo pip install zmq
-- Bind the triggering script trigger_YL.sh command to key combination of your choice (e.g. Super + y):  
-(Note for some reason it might be neccessary to specify your shell within the shebang. For example .../bash instead of .../sh.)
-- Triggering the script will unblock YubiKey. After activation of your YubiKey or after timeout, YubiKey output will again be blocked. 
+- Triggering via key combination (default: super + y) will unlock YubiKey.
+- After activation of your YubiKey or after timeout, YubiKey output will again be blocked. 
 
 
 ## Tested on:
