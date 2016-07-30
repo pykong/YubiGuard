@@ -1,19 +1,13 @@
-## Installation:
-Run the following shell command to install:
-
-wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh 
-&& sudo chmod +x ./YubiLock_installer.sh
-&& ./YubiLock_installer.sh
-&& rm -f ./YubiLock_installer.sh
-
-
 ## How to use:
 - Simply Triggering via key combination (default: super + y) will unlock YubiKey.
 - After output from your YubiKey or after timeout, YubiKey output will again be blocked.
 
 ## How to customize:
 - open settings.ini (default path: ~/.YubiLock/)
-- you may specify timeout in seconds
-- you may also specify your own key code for triggering YubiLock
+### Timeout:
+- you may specify timeout in seconds under the TIMEOUT option
+### Key codes:
 - to get a comprehensive list of all key codes run: xmodmap -pke
-- edit KEY_CODE option regardingly
+- pick the numerical key codes that correspond to the key combination you desire
+- one or more keys can be selected
+- edit KEY_CODE option regardingly, with the keycodes separated by comma
