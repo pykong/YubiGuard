@@ -19,6 +19,6 @@
 #exec /path/to/my/script.sh
 #EOF
 
-#nohup ./YubiGuard.py &
+#nohup ./YubiGuard.py > /dev/null 2>&1&&
 
 #exit
