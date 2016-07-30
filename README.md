@@ -4,12 +4,6 @@ Python script to prevent accidental triggering of YubiKeys on Linux.
 
 Most recent version: 0.6
 
-The script uses the xinput command to identify and control the output of YubiKeys:
-- xinput list
-- xinput --enable <id>
-- xinput --disable <id>
-
-
 
 ## Advantages over YubiSwitch:
 1. No root privilege required to run!
@@ -34,6 +28,12 @@ The script uses the xinput command to identify and control the output of YubiKey
 _Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
 
 _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
+
+_Q:_ How does YubiLock actiavte and deactivate YubiKeys?
+
+_A:_ YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+xinput list, xinput --enable <id> and xinput --disable <id>
+
 
 ## Changelog:
 ### v 0.2:
