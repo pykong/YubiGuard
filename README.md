@@ -32,6 +32,7 @@ xinput --disable <id>
 
 ## FAQ:
 _Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
+
 _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
 ## Changelog:
@@ -51,3 +52,12 @@ _A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as in
 ### v 0.5
 - code rectified
 - introduced missing thread locking
+
+### v 0.6 (major update)
+- added a Panel Indicator (replacing notification of LOCK/UNLOCK)
+- major rectification of code
+- switched from thread based concurrency to process based for superb responsiveness
+- added key event listener, replacing triggering via external script over zmq
+- added settings.ini to grant user to customize time out and triggering key combination
+- eliminated minor bugs which led to laggy or unreliable unlocking
+
