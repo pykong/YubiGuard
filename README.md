@@ -28,8 +28,10 @@ wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh
 
 ## How to customize:
 - open settings.ini (default path: ~/.YubiLock/)
+
 ### Timeout:
 - you may specify timeout in seconds under the TIMEOUT option
+
 ### Key codes:
 - to get a comprehensive list of all key codes run: xmodmap -pke
 - pick the numerical key codes that correspond to the key combination you desire
