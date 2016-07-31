@@ -26,11 +26,12 @@ sudo pip install python-xlib
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
-- the locked state is indicated in the panel by the default icon:
+- the locked state is indicated in the panel by the default icon.
 - simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
-- in the unlocked state the icon changes to green: 
+- in the unlocked state the icon changes to green.
 - after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default
-- while no YubiKeys are inserted, the panel indicator will be darkened: 
+- while no YubiKeys are inserted, the panel indicator will be darkened.
+
 
 
 
