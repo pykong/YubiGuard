@@ -18,7 +18,8 @@ Run the following shell command to install (-- INSTALLER SCRIPT NOT TESTED YET -
 
 
 ### Requirements:
-- python-xlib (run: sudo pip install python-xlib)
+-python-xlib
+    sudo pip install python-xlib)
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
