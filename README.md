@@ -20,9 +20,9 @@ Most recent version: 0.6
 ### Requirements:
 - python-xlib
 
-'''
+´´´
 sudo pip install python-xlib
-'''
+´´´
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
