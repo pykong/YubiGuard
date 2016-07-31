@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>YubiLock by bfelder</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>YubiLock</h1>
+        <p>Python script to prevent accidental triggering of YubiKeys on Linux.</p>
+
+        <p class="view"><a href="https://github.com/bfelder/YubiLock">View the Project on GitHub <small>bfelder/YubiLock</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/bfelder/YubiLock/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bfelder/YubiLock/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bfelder/YubiLock">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a id="advantages-over-yubiswitch" class="anchor" href="#advantages-over-yubiswitch" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advantages over YubiSwitch:</h2>
+
+<ol>
+<li><strong>No root privilege required to run!</strong></li>
+<li><strong>No unintended output release after reactivation, if you pressed your YubiKey while locked!</strong></li>
+<li>Can handle multiple YubiKeys concurrently.</li>
+<li>Timeout which locks off YubiKey after 5 seconds.</li>
+<li>Automatically locking after YubiKey has been triggered.</li>
+<li>Panel indicator showing the activation status of YubiKey(s).</li>
+</ol>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation:</h2>
+
+<h3>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements:</h3>
+
+<ul>
+<li>
+<p>python-xlib</p>
+
+<p>sudo pip install python-xlib</p>
+</li>
+</ul>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage:</h2>
+
+<ul>
+<li>YubiLock locks output from all inserted YubiKeys by default.</li>
+<li>the locked state is indicated in the panel by the default icon: </li>
+<li>simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.</li>
+<li>in the unlocked state the icon changes to green: </li>
+<li>after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default</li>
+<li>while no YubiKeys are inserted, the panel indicator will be darkened: <img src="%7B%7Bsite.baseurl%7D%7Doff.png" alt="off.png">
+</li>
+</ul>
+
+<h2>
+<a id="how-to-customize" class="anchor" href="#how-to-customize" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to customize:</h2>
+
+<ul>
+<li>open settings.ini (default path: ~/.YubiLock/)</li>
+</ul>
+
+<h3>
+<a id="customize-timeout" class="anchor" href="#customize-timeout" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customize timeout:</h3>
+
+<ul>
+<li>you may specify timeout in seconds under the <strong>TIMEOUT</strong> option</li>
+</ul>
+
+<h3>
+<a id="customize-key-codes" class="anchor" href="#customize-key-codes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customize key codes:</h3>
+
+<ul>
+<li>to get a comprehensive list of all key codes run: <em>xmodmap -pke</em>
+</li>
+<li>pick the numerical key codes that correspond to the key combination you desire</li>
+<li>one or more keys can be selected</li>
+<li>not all keycodes work or are recommended, e.g. "super + y" will print out an additional "y"</li>
+<li>note that system key bindings will not be overridden, so be careful not to choose one already in use</li>
+<li>edit <strong>KEY_CODE</strong> option regardingly, with the keycodes separated by comma</li>
+</ul>
+
+<h3>
+<a id="finally" class="anchor" href="#finally" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Finally:</h3>
+
+<ul>
+<li>save settings.ini</li>
+<li>restart YubiLock for the changes to take effect</li>
+</ul>
+
+<h2>
+<a id="tested-and-found-functional-with" class="anchor" href="#tested-and-found-functional-with" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tested and found functional with:</h2>
+
+<h3>
+<a id="linux-distributions" class="anchor" href="#linux-distributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linux Distributions:</h3>
+
+<ul>
+<li>Xubuntu 15.10 (Wily Werewolf)</li>
+<li>Xubuntu 16.04 (Xenial Xerus)</li>
+</ul>
+
+<h3>
+<a id="yubikey-models" class="anchor" href="#yubikey-models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YubiKey models:</h3>
+
+<ul>
+<li>YubiKey 4 Nano</li>
+</ul>
+
+<h3>
+<a id="keyboard-layout" class="anchor" href="#keyboard-layout" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keyboard Layout:</h3>
+
+<ul>
+<li>German (QWERTZU)</li>
+</ul>
+
+<h2>
+<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ:</h2>
+
+<p><strong><em>Q:</em></strong> The LED of my YubiKey is still active. Does this mean the script is not working?
+<strong><em>A:</em></strong> No. LEDs will continue to blink, despite YubiKey output being blocked as intended.</p>
+
+<p><strong><em>Q:</em></strong> How does YubiLock actiavte and deactivate YubiKeys?
+<strong><em>A:</em></strong> YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+<em>xinput list</em>, <em>xinput --enable </em>, <em>xinput --disable </em> and <em>xinput test </em>.</p>
+
+<h2>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
+
+<h2></h2>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog:</h2>
+
+<h3>
+<a id="v-02" class="anchor" href="#v-02" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.2:</h3>
+
+<ul>
+<li>renamed to YubiLock, as this name better portrays the function</li>
+<li>instead of text notificaions, now descriptive icons are displayed</li>
+<li>in case of changing xinput ids (e.g. devices are switched) old ids will be automatically activated</li>
+</ul>
+
+<h3>
+<a id="v-03" class="anchor" href="#v-03" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.3</h3>
+
+<ul>
+<li>beautified icons</li>
+<li>set working dir, to always allow relative import of icons</li>
+<li>now preventing overtriggering when hitting key combinations in short succession</li>
+</ul>
+
+<h3>
+<a id="v-04" class="anchor" href="#v-04" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.4</h3>
+
+<ul>
+<li>added exit handler, which will reactivate YubiKeys after script has exited</li>
+</ul>
+
+<h3>
+<a id="v-05" class="anchor" href="#v-05" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.5</h3>
+
+<ul>
+<li>code rectified</li>
+<li>introduced missing thread locking</li>
+</ul>
+
+<h3>
+<a id="v-06-major-update" class="anchor" href="#v-06-major-update" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.6 (major update)</h3>
+
+<ul>
+<li>added a Panel Indicator (replacing notification of LOCK/UNLOCK)</li>
+<li>major rectification of code</li>
+<li>switched from thread based concurrency to process based for superb responsiveness</li>
+<li>added key event listener, replacing triggering via external script over zmq</li>
+<li>added settings.ini to grant user to customize time out and triggering key combination</li>
+<li>eliminated minor bugs which led to laggy or unreliable unlocking</li>
+</ul>
+
+<h2>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h2>
+
+<p>Having trouble with YubiLock? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bfelder">bfelder</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
