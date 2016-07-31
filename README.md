@@ -60,7 +60,7 @@ Run the following shell command to install:
 
 **_Q:_** How does YubiLock actiavte and deactivate YubiKeys?
 **_A:_** YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
-xinput list, xinput --enable <id>, xinput --disable <id> and xinput test.
+_xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test <id>_.
 
 
 ## Changelog:
