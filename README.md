@@ -23,7 +23,7 @@ wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh
 
 
 ## How to use:
-- Simply Triggering via key combination (default: super + y) will unlock YubiKey.
+- Simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
 - After output from your YubiKey or after timeout, YubiKey output will again be blocked.
 
 ## How to customize:
@@ -36,22 +36,32 @@ wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh
 - to get a comprehensive list of all key codes run: xmodmap -pke
 - pick the numerical key codes that correspond to the key combination you desire
 - one or more keys can be selected
+- not all keycodes work or are recommended, e.g. "super + y" will print out an additional "y"
 - edit KEY_CODE option regardingly, with the keycodes separated by comma
+
+### Finally:
+- save settings.ini
+- restart YubiLock for the changes to take effect
 
 
 ## Tested on:
+### Linux Distributions:
 - Xubuntu 15.10 (Wily Werewolf)
 - Xubuntu 16.04 (Xenial Xerus)
 
+### YubiKey models:
+- YubiKey 4 Nano
+
+### Keyboard Layout:
+- German (QWERTZU)
+
 ## FAQ:
-_Q:_ The LED of my YubiKey is still active. Does this mean the script is not working?
+**_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
+**_A:_** No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
-_A:_ No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
-
-_Q:_ How does YubiLock actiavte and deactivate YubiKeys?
-
-_A:_ YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
-xinput list, xinput --enable <id> and xinput --disable <id>
+**_Q:_** How does YubiLock actiavte and deactivate YubiKeys?
+**_A:_** YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+xinput list, xinput --enable <id>, xinput --disable <id> and xinput test.
 
 
 ## Changelog:
@@ -79,4 +89,3 @@ xinput list, xinput --enable <id> and xinput --disable <id>
 - added key event listener, replacing triggering via external script over zmq
 - added settings.ini to grant user to customize time out and triggering key combination
 - eliminated minor bugs which led to laggy or unreliable unlocking
-
