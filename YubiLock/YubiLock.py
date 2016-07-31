@@ -37,7 +37,7 @@ os.chdir(d_name)
 
 # BASIC SETTINGS -------------------------------------------------------------------------------------------------------
 APPINDICATOR_ID = 'yubilock-indicator'
-HELP_URL = "https://github.com/bfelder/YubiLock/blob/master/HELP.md"
+HELP_URL = "https://github.com/bfelder/YubiLock#usage"
 
 # icons:
 ICON_DIR = './icons/'
