@@ -23,6 +23,7 @@ Run the following shell command to install:
 - Simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
 - After output from your YubiKey or after timeout, YubiKey output will again be blocked.
 
+
 ## How to customize:
 - open settings.ini (default path: ~/.YubiLock/)
 
@@ -34,6 +35,7 @@ Run the following shell command to install:
 - pick the numerical key codes that correspond to the key combination you desire
 - one or more keys can be selected
 - not all keycodes work or are recommended, e.g. "super + y" will print out an additional "y"
+- note that system key bindings will not be overridden, so be careful not to choose a already used key combination
 - edit KEY_CODE option regardingly, with the keycodes separated by comma
 
 ### Finally:
