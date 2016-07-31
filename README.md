@@ -16,10 +16,7 @@ Most recent version: 0.6
 ## Installation:
 Run the following shell command to install:
 
-wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh 
-&& sudo chmod +x ./YubiLock_installer.sh
-&& ./YubiLock_installer.sh
-&& rm -f ./YubiLock_installer.sh
+> wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh && sudo chmod +x ./YubiLock_installer.sh && ./YubiLock_installer.sh && rm -f ./YubiLock_installer.sh
 
 
 ## How to use:
