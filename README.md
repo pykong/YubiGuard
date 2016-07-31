@@ -6,12 +6,12 @@ Most recent version: 0.6
 
 
 ## Advantages over YubiSwitch:
-1. No root privilege required to run!
-2. No unintended output release after reactivation, if you pressed your YubiKey while blocked!
-3. Can handle more than one YubiKey.
+1. **No root privilege required to run!**
+2. **No unintended output release after reactivation, if you pressed your YubiKey while locked!**
+3. Can handle multiple YubiKeys concurrently.
 4. Timeout which locks off YubiKey after 5 seconds.
 5. Automatically locking after YubiKey has been triggered.
-6. Visual indicating the activation status of YubiKey(s).
+6. Panel indicator showing the activation status of YubiKey(s).
 
 ## Installation:
 Run the following shell command to install:
@@ -20,17 +20,22 @@ Run the following shell command to install:
 
 
 ## How to use:
-- Simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
-- After output from your YubiKey or after timeout, YubiKey output will again be blocked.
+- YubiLock locks output from all inserted YubiKeys by default.
+- the locked state is indicated in the panel by the default icon
+- simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
+- in the unlocked state the icon changes to green
+- after output from your YubiKey or after timeout, YubiKey output will again be blocked and the icon changes back to default
+- while no YubiKeys are inserted, the panel indicator will be darkened: ![]({{site.baseurl}}/https://github.com/bfelder/YubiLock/blob/master/icons/nokey_icon.svg)
+
 
 
 ## How to customize:
 - open settings.ini (default path: ~/.YubiLock/)
 
-### Timeout:
+### Customize timeout:
 - you may specify timeout in seconds under the TIMEOUT option
 
-### Key codes:
+### Customize key codes:
 - to get a comprehensive list of all key codes run: xmodmap -pke
 - pick the numerical key codes that correspond to the key combination you desire
 - one or more keys can be selected
