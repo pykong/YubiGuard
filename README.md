@@ -14,18 +14,21 @@ Most recent version: 0.6
 6. Panel indicator showing the activation status of YubiKey(s).
 
 ## Installation:
-Run the following shell command to install:
-
-> wget --inet4-only  github.com/bfelder/YubiLock/edit/master/YubiLock_installer.sh && sudo chmod +x ./YubiLock_installer.sh && ./YubiLock_installer.sh && rm -f ./YubiLock_installer.sh
+Run the following shell command to install (-- INSTALLER SCRIPT NOT TESTED YET --):
 
 
-## How to use:
+### Requirements:
+- python-xlib (run: sudo pip install python-xlib)
+
+## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
-- the locked state is indicated in the panel by the default icon
+- the locked state is indicated in the panel by the default icon:
 - simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
-- in the unlocked state the icon changes to green
-- after output from your YubiKey or after timeout, YubiKey output will again be blocked and the icon changes back to default
-- while no YubiKeys are inserted, the panel indicator will be darkened: ![]({{site.baseurl}}/https://github.com/bfelder/YubiLock/blob/master/icons/nokey_icon.svg)
+- in the unlocked state the icon changes to green: 
+- after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default
+- while no YubiKeys are inserted, the panel indicator will be darkened: 
+
+
 
 
 
@@ -40,7 +43,7 @@ Run the following shell command to install:
 - pick the numerical key codes that correspond to the key combination you desire
 - one or more keys can be selected
 - not all keycodes work or are recommended, e.g. "super + y" will print out an additional "y"
-- note that system key bindings will not be overridden, so be careful not to choose a already used key combination
+- note that system key bindings will not be overridden, so be careful not to choose one already in use
 - edit KEY_CODE option regardingly, with the keycodes separated by comma
 
 ### Finally:
