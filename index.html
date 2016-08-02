@@ -28,12 +28,20 @@
         </ul>
       </header>
       <section>
-        <h2>
+        <h1>
+<a id="yubilock" class="anchor" href="#yubilock" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YubiLock</h1>
+
+<p>Python script to prevent accidental triggering of YubiKeys on Linux.</p>
+
+<p>Most recent version: 0.7</p>
+
+<h2>
 <a id="advantages-over-yubiswitch" class="anchor" href="#advantages-over-yubiswitch" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advantages over YubiSwitch:</h2>
 
 <ol>
 <li><strong>No root privilege required to run!</strong></li>
 <li><strong>No unintended output release after reactivation, if you pressed your YubiKey while locked!</strong></li>
+<li>Detects YubiKeys automatically, no need to hardcode ids manually.</li>
 <li>Can handle multiple YubiKeys concurrently.</li>
 <li>Timeout which locks off YubiKey after 5 seconds.</li>
 <li>Automatically locking after YubiKey has been triggered.</li>
@@ -41,69 +49,47 @@
 </ol>
 
 <h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation:</h2>
+<a id="installation--setup" class="anchor" href="#installation--setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation &amp; Setup</h2>
+
+<p>[...]</p>
+
+<h3>
+<a id="binding-key-code" class="anchor" href="#binding-key-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Binding Key Code</h3>
 
 <h3>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements:</h3>
 
 <ul>
-<li>
-<p>python-xlib</p>
-
-<p>sudo pip install python-xlib</p>
-</li>
+<li>pyzmq</li>
 </ul>
+
+<pre><code>sudo pip install pyzmq
+</code></pre>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage:</h2>
 
 <ul>
 <li>YubiLock locks output from all inserted YubiKeys by default.</li>
-<li>the locked state is indicated in the panel by the default icon: </li>
-<li>simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.</li>
-<li>in the unlocked state the icon changes to green: </li>
+<li>the locked state is indicated in the panel by the default icon.</li>
+<li>simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.</li>
+<li>in the unlocked state the icon changes to green.</li>
 <li>after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default</li>
-<li>while no YubiKeys are inserted, the panel indicator will be darkened: <img src="%7B%7Bsite.baseurl%7D%7Doff.png" alt="off.png">
-</li>
+<li>while no YubiKeys are inserted, the panel indicator will be darkened.</li>
 </ul>
 
 <h2>
-<a id="how-to-customize" class="anchor" href="#how-to-customize" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to customize:</h2>
+<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ:</h2>
 
-<ul>
-<li>open settings.ini (default path: ~/.YubiLock/)</li>
-</ul>
+<p><strong><em>Q:</em></strong> The LED of my YubiKey is still active. Does this mean the script is not working?
+<strong><em>A:</em></strong> No. LEDs will continue to blink, despite YubiKey output being blocked as intended.</p>
 
-<h3>
-<a id="customize-timeout" class="anchor" href="#customize-timeout" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customize timeout:</h3>
-
-<ul>
-<li>you may specify timeout in seconds under the <strong>TIMEOUT</strong> option</li>
-</ul>
-
-<h3>
-<a id="customize-key-codes" class="anchor" href="#customize-key-codes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customize key codes:</h3>
-
-<ul>
-<li>to get a comprehensive list of all key codes run: <em>xmodmap -pke</em>
-</li>
-<li>pick the numerical key codes that correspond to the key combination you desire</li>
-<li>one or more keys can be selected</li>
-<li>not all keycodes work or are recommended, e.g. "super + y" will print out an additional "y"</li>
-<li>note that system key bindings will not be overridden, so be careful not to choose one already in use</li>
-<li>edit <strong>KEY_CODE</strong> option regardingly, with the keycodes separated by comma</li>
-</ul>
-
-<h3>
-<a id="finally" class="anchor" href="#finally" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Finally:</h3>
-
-<ul>
-<li>save settings.ini</li>
-<li>restart YubiLock for the changes to take effect</li>
-</ul>
+<p><strong><em>Q:</em></strong> How does YubiLock actiavte and deactivate YubiKeys?
+<strong><em>A:</em></strong> YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+<em>xinput list</em>, <em>xinput --enable </em>, <em>xinput --disable </em> and <em>xinput test </em>.</p>
 
 <h2>
-<a id="tested-and-found-functional-with" class="anchor" href="#tested-and-found-functional-with" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tested and found functional with:</h2>
+<a id="tested-on" class="anchor" href="#tested-on" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tested on:</h2>
 
 <h3>
 <a id="linux-distributions" class="anchor" href="#linux-distributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linux Distributions:</h3>
@@ -126,21 +112,6 @@
 <ul>
 <li>German (QWERTZU)</li>
 </ul>
-
-<h2>
-<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ:</h2>
-
-<p><strong><em>Q:</em></strong> The LED of my YubiKey is still active. Does this mean the script is not working?
-<strong><em>A:</em></strong> No. LEDs will continue to blink, despite YubiKey output being blocked as intended.</p>
-
-<p><strong><em>Q:</em></strong> How does YubiLock actiavte and deactivate YubiKeys?
-<strong><em>A:</em></strong> YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
-<em>xinput list</em>, <em>xinput --enable </em>, <em>xinput --disable </em> and <em>xinput test </em>.</p>
-
-<h2>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
-
-<h2></h2>
 
 <h2>
 <a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog:</h2>
@@ -190,10 +161,12 @@
 <li>eliminated minor bugs which led to laggy or unreliable unlocking</li>
 </ul>
 
-<h2>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h2>
+<h3>
+<a id="v-07" class="anchor" href="#v-07" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.7</h3>
 
-<p>Having trouble with YubiLock? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+<ul>
+<li>switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release (see issue)</li>
+</ul>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/bfelder">bfelder</a></p>
