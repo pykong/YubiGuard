@@ -2,23 +2,24 @@
 
 Python script to prevent accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.6
+Most recent version: 0.7
 
 
 ## Advantages over YubiSwitch:
 1. **No root privilege required to run!**
 2. **No unintended output release after reactivation, if you pressed your YubiKey while locked!**
-3. Can handle multiple YubiKeys concurrently.
-4. Timeout which locks off YubiKey after 5 seconds.
-5. Automatically locking after YubiKey has been triggered.
-6. Panel indicator showing the activation status of YubiKey(s).
+3. Detects YubiKeys automatically, no need to hardcode ids manually.
+4. Can handle multiple YubiKeys concurrently.
+5. Timeout which locks off YubiKey after 5 seconds.
+6. Automatically locking after YubiKey has been triggered.
+7. Panel indicator showing the activation status of YubiKey(s).
 
 ## Installation:
 [...]
 
 
 ### Requirements:
-- python-xlib
+- pyzmq
 
 ```
 sudo pip install python-xlib
@@ -101,3 +102,6 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 - added key event listener, replacing triggering via external script over zmq
 - added settings.ini to grant user to customize time out and triggering key combination
 - eliminated minor bugs which led to laggy or unreliable unlocking
+
+### v 0.7
+- switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release
