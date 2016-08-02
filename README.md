@@ -33,6 +33,14 @@ sudo pip install pyzmq
 - after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default
 - while no YubiKeys are inserted, the panel indicator will be darkened.
 
+## FAQ:
+**_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
+**_A:_** No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
+
+**_Q:_** How does YubiLock actiavte and deactivate YubiKeys?
+**_A:_** YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+_xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test <id>_.
+
 ## Tested on:
 ### Linux Distributions:
 - Xubuntu 15.10 (Wily Werewolf)
@@ -44,13 +52,7 @@ sudo pip install pyzmq
 ### Keyboard Layout:
 - German (QWERTZU)
 
-## FAQ:
-**_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
-**_A:_** No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
-**_Q:_** How does YubiLock actiavte and deactivate YubiKeys?
-**_A:_** YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
-_xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test <id>_.
 
 
 ## Changelog:
