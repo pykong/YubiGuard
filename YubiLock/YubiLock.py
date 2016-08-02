@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiLock VERSION 0.6
+# YubiLock VERSION 0.7
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 
@@ -10,12 +10,12 @@ import sys
 import re
 import time
 
-import shlex
 import subprocess
 
-import threading
+
 from multiprocessing import Process
 from multiprocessing.queues import Queue
+from threading import Thread
 
 import gi.repository
 gi.require_version('Gtk', '3.0')
@@ -24,10 +24,7 @@ gi.require_version('AppIndicator3', '0.1')
 from gi.repository import AppIndicator3 as AppIndicator
 
 from ConfigParser import SafeConfigParser
-from Xlib import X
-from Xlib.display import Display
-from Xlib.ext import record
-from Xlib.protocol import rq
+import zmq
 
 
 # change working dir to that of script:
@@ -55,13 +52,23 @@ NOKEY_SIGNAL = 'NOKEY'
 parser = SafeConfigParser()
 parser.read('settings.ini')
 TIMEOUT = parser.getint('GENERAL', 'TIMEOUT')
-KEY_CODES_L = map(int, parser.get('KEYS', 'KEY_CODES').split(','))
+
+# get IP and PORT from trigger_yl.sh script itself, so these values are stored in a single place
+IP = ''
+PORT = ''
+
+ip_pat = re.compile(r"(?:IP=)(.+)", re.IGNORECASE)
+port_pat = re.compile(r"(?:PORT=)(.+)", re.IGNORECASE)
+with open('yl_trigger.sh', 'r') as f:
+    f_body = f.read()
+    IP = re.search(ip_pat, f_body).groups()[0]
+    PORT = re.search(port_pat, f_body).groups()[0]
+
 
 
 # static methods:
 def shell(cmd):
-    shlex_cmd = shlex.split(cmd)
-    stdout = subprocess.Popen(shlex_cmd, stdout=subprocess.PIPE)
+    stdout = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     return stdout
 
 
@@ -79,7 +86,7 @@ class PanelIndicator(object):
         stdout = subprocess.Popen(["export", "NO_AT_BRIDGE=1"], shell=True, stdout=subprocess.PIPE)
 
         # listener loop for icon switch signals
-        ui_thread = threading.Thread(target=self.update_icon)
+        ui_thread = Thread(target=self.update_icon)
         ui_thread.daemon = True
         ui_thread.start()
 
@@ -131,55 +138,29 @@ class PanelIndicator(object):
             time.sleep(.01)
 
 
-class KeyEventListener(object):
+class ZmqListener(object):
     def __init__(self, on_q):
-        self.disp = Display()
-        # query_l = []
-        self.kp_l = []  # list to put in currently pressed keys
+        """ Listens for triggering through zmq message."""
         self.on_q = on_q
-
-        # Monitor keypress and button press
-        self.ctx = self.disp.record_create_context(
-            0,
-            [record.AllClients],
-            [{
-                'core_requests': (0, 0),
-                'core_replies': (0, 0),
-                'ext_requests': (0, 0, 0, 0),
-                'ext_replies': (0, 0, 0, 0),
-                'delivered_events': (0, 0),
-                'device_events': (X.KeyReleaseMask, X.ButtonReleaseMask),
-                'errors': (0, 0),
-                'client_started': False,
-                'client_died': False,
-            }])
-
-    def ke_handler(self, reply):
-        """ This function is called when a xlib key_event is fired """
-        data = reply.data
-        global KEY_CODES_L
-
-        while len(data):
-            key_event, data = rq.EventField(None).parse_binary_value(data, self.disp.display, None, None)
-            if key_event.type == X.KeyPress:
-                # KEY PRESSED
-                if key_event.detail not in self.kp_l:
-                    self.kp_l.append(key_event.detail)
-            elif key_event.type == X.KeyRelease:
-                # KEY RELEASED
-                self.kp_l.remove(key_event.detail)
-
-            if sorted(KEY_CODES_L) == sorted(self.kp_l):
-                """ KEY combination PRESSED --> action! """
-                print('Key (combination) pressed.')
-                self.on_q.put(ON_SIGNAL)
+        ctx = zmq.Context.instance()
+        self.s = ctx.socket(zmq.PULL)
+        url = 'tcp://{}:{}'.format(IP, PORT)
+        print url
+        self.s.bind(url)
 
     def start_listener(self):
-        self.disp.record_enable_context(self.ctx, self.ke_handler)  # disp.record_enable_context(ctx, handler)
-        self.disp.record_free_context(self.ctx)
+        print('ZMQ listener started')
+        while True:
+            try:
+                self.s.recv(zmq.NOBLOCK)  # note NOBLOCK here
+            except zmq.Again:
+                # no message to recv, do other things
+                time.sleep(0.01)
+            else:
+                self.on_q.put(ON_SIGNAL)
 
 
-class AsynchronousFileReader(threading.Thread):
+class AsynchronousFileReader(Thread):
     """
     Helper class to implement asynchronous reading of a file
     in a separate thread. Pushes read lines on a queue to
@@ -192,7 +173,7 @@ class AsynchronousFileReader(threading.Thread):
         # assert isinstance(queue, Queue.Queue)  # from import Queue
         assert isinstance(queue, Queue)
         assert callable(fd.readline)
-        threading.Thread.__init__(self)
+        Thread.__init__(self)
         self._fd = fd
         self._queue = queue
 
@@ -221,9 +202,9 @@ class YubiLock:
         cs_proc = Process(target=self.change_state)
         cs_proc.daemon = False  # no daemon, or main program will terminate before YubiKeys can be unlocked
 
-        kel = KeyEventListener(self.on_q)
-        kel_proc = Process(target=kel.start_listener)
-        kel_proc.daemon = True
+        zmq_lis = ZmqListener(self.on_q)  # somehow works ony with threads not processes
+        zmq_lis_thr = Thread(target=zmq_lis.start_listener)  # start_listener()?
+        zmq_lis_thr.setDaemon(True)
 
         pi = PanelIndicator(self.pi_q)
 
@@ -231,7 +212,7 @@ class YubiLock:
         try:
             gi_proc.start()
             cs_proc.start()
-            kel_proc.start()
+            zmq_lis_thr.start()
 
             pi.run_pi()  # main loop of root process
 
@@ -315,11 +296,14 @@ class YubiLock:
                 elif cs_signal == ON_SIGNAL:
                     self.unlock_keys(cs_is_l)
 
-                    mon_thread = threading.Thread(target=self.yk_monitor, args=(cs_is_l,))
+                    mon_thread = Thread(target=self.yk_monitor, args=(cs_is_l,))
                     mon_thread.start()
                     mon_thread.join()
 
                     self.lock_keys(cs_is_l)
+
+                    # putting in separator, nullifying all preceeding ON_SIGNALS to prevent possible over triggering:
+                    self.on_q.put('')
 
                 elif not init_locked:  # initial disabling
                     self.lock_keys(cs_is_l)
@@ -329,7 +313,6 @@ class YubiLock:
             time.sleep(.001)
 
     def yk_monitor(self, mon_l):
-
         # forming command to run parallel monitoring processes
         monitor = shell(' & '.join(["xinput test {}".format(y_id) for y_id in mon_l]))
 
@@ -341,7 +324,9 @@ class YubiLock:
         timestamp = time.time()
         while not stdout_reader.eof and time.time() - timestamp < TIMEOUT:
             while stdout_queue.qsize() > 0:
-                stdout_queue.get()  # emptying queue
+                p = stdout_queue.get()  # emptying queue
+                if 'press' in p:
+                    print(p)
                 triggered = True
                 time.sleep(.01)
             if triggered:
@@ -349,9 +334,6 @@ class YubiLock:
                 break
 
             time.sleep(.001)
-
-        monitor.kill()
-        stdout_reader.join()
 
 
 # FIRING UP YUBILOCK ---------------------------------------------------------------------------------------------------
