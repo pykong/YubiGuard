@@ -14,48 +14,24 @@ Most recent version: 0.7
 6. Automatically locking after YubiKey has been triggered.
 7. Panel indicator showing the activation status of YubiKey(s).
 
-## Installation:
+## Installation & Setup
 [...]
-
+### Binding Key Code
 
 ### Requirements:
 - pyzmq
 
 ```
-sudo pip install python-xlib
+sudo pip install pyzmq
 ```
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
 - the locked state is indicated in the panel by the default icon.
-- simply Triggering via key combination (default: ctrl_left + y) will unlock YubiKey.
+- simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.
 - in the unlocked state the icon changes to green.
 - after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default
 - while no YubiKeys are inserted, the panel indicator will be darkened.
-
-
-
-
-
-
-## How to customize:
-- open settings.ini (default path: ~/.YubiLock/)
-
-### Customize timeout:
-- you may specify timeout in seconds under the **TIMEOUT** option
-
-### Customize key codes:
-- to get a comprehensive list of all key codes run: xmodmap -pke
-- pick the numerical key codes that correspond to the key combination you desire
-- one or more keys can be selected
-- not all keycodes work or are recommended (e.g. "super + y" will print out an additional "y")
-- note that system key bindings will not be overridden, so be careful not to choose one already in use
-- edit **KEY_CODE** option regardingly, with the keycodes separated by comma
-
-### Finally:
-- save settings.ini
-- restart YubiLock for the changes to take effect
-
 
 ## Tested on:
 ### Linux Distributions:
@@ -104,4 +80,4 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 - eliminated minor bugs which led to laggy or unreliable unlocking
 
 ### v 0.7
-- switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release
+- switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release (see issue)
