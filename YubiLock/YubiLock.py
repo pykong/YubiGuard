@@ -4,14 +4,12 @@
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 
-
 import os
 import sys
 import re
 import time
 
 import subprocess
-
 
 from multiprocessing import Process
 from multiprocessing.queues import Queue
@@ -23,7 +21,6 @@ from gi.repository import Gtk
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import AppIndicator3 as AppIndicator
 
-from ConfigParser import SafeConfigParser
 import zmq
 
 
@@ -48,22 +45,15 @@ EXIT_SIGNAL = 'EXIT'
 OFF_SIGNAL = 'OFF'
 NOKEY_SIGNAL = 'NOKEY'
 
-# fetch configs from settings.ini:
-parser = SafeConfigParser()
-parser.read('settings.ini')
-TIMEOUT = parser.getint('GENERAL', 'TIMEOUT')
+TIMEOUT = 5
 
 # get IP and PORT from trigger_yl.sh script itself, so these values are stored in a single place
-IP = ''
-PORT = ''
-
 ip_pat = re.compile(r"(?:IP=)(.+)", re.IGNORECASE)
 port_pat = re.compile(r"(?:PORT=)(.+)", re.IGNORECASE)
 with open('yl_trigger.sh', 'r') as f:
     f_body = f.read()
     IP = re.search(ip_pat, f_body).groups()[0]
     PORT = re.search(port_pat, f_body).groups()[0]
-
 
 
 # static methods:
