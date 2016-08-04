@@ -2,7 +2,7 @@
 
 Python script to prevent accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.7
+Most recent version: 0.8
 
 
 ## Advantages over YubiSwitch:
@@ -83,3 +83,8 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 
 ### v 0.7
 - switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release (see issue)
+
+### v 0.8
+- changed name back to YubiGuard, as two other GitHub projects are already titled YubiLock
+- updated icons
+- minor rectifivation of code
