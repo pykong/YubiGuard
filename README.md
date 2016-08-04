@@ -1,6 +1,6 @@
-# YubiLock
+# YubiGuard
 
-Python script to prevent accidental triggering of YubiKeys on Linux.
+Python script to protect from accidental triggering of YubiKeys on Linux.
 
 Most recent version: 0.8
 
