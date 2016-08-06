@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiGuard VERSION 0.8
+# YubiGuard VERSION 0.9
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
+# shell command for pushing ZMQ: echo -e $(printf '\\x01\\x00\\x%02x\\x00%s' $((1 + ${#MSG})) "$MSG") | nc -q1 $IP $PORT
 
 import os
 import sys
 import re
 import time
-
+import zmq
 import subprocess
 
 from multiprocessing import Process
@@ -16,13 +17,12 @@ from multiprocessing.queues import Queue
 from threading import Thread
 
 import gi.repository
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import AppIndicator3 as AppIndicator
-
-import zmq
-
 
 # change working dir to that of script:
 abspath = os.path.abspath(__file__)
@@ -30,6 +30,8 @@ d_name = os.path.dirname(abspath)
 os.chdir(d_name)
 
 # BASIC SETTINGS -------------------------------------------------------------------------------------------------------
+TIMEOUT = 5
+
 APPINDICATOR_ID = 'yubiguard-indicator'
 HELP_URL = "https://github.com/bfelder/YubiGuard#usage"
 
@@ -40,22 +42,15 @@ ON_ICON = ICON_DIR + 'on_icon.svg'
 NOKEY_ICON = ICON_DIR + 'nokey_icon.svg'
 
 # Defining signals for queue communication:
-
-EXIT_SIGNAL = 'EXIT'
+ON_SIGNAL = "ON"
 OFF_SIGNAL = 'OFF'
 NOKEY_SIGNAL = 'NOKEY'
+EXIT_SIGNAL = 'EXIT'
 
-TIMEOUT = 5
-
-# get IP and PORT from trigger_yl.sh script itself, so these values are stored in a single place
-ip_pat = re.compile(r"(?:IP=)(.+)", re.IGNORECASE)
-port_pat = re.compile(r"(?:PORT=)(.+)", re.IGNORECASE)
-on_pat = re.compile(r"(?:MSG=)(.+)", re.IGNORECASE)
-with open('yl_trigger.sh', 'r') as f:
-    f_body = f.read()
-    IP = re.search(ip_pat, f_body).groups()[0]
-    PORT = re.search(port_pat, f_body).groups()[0]
-    ON_SIGNAL = re.search(on_pat, f_body).groups()[0]
+URL = "tcp://{IP}:{PORT}".format(
+    IP="127.0.0.1",
+    PORT="5555"
+)
 
 
 # static methods:
@@ -75,7 +70,7 @@ class PanelIndicator(object):
 
     def run_pi(self):
         # suppresses error: Couldn't connect to accessibility bus: Failed to connect to socket:
-        stdout = subprocess.Popen(["export", "NO_AT_BRIDGE=1"], shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen(["export", "NO_AT_BRIDGE=1"], shell=True)
 
         # listener loop for icon switch signals
         ui_thread = Thread(target=self.update_icon)
@@ -136,9 +131,7 @@ class ZmqListener(object):
         self.on_q = on_q
         ctx = zmq.Context.instance()
         self.s = ctx.socket(zmq.PULL)
-        url = 'tcp://{}:{}'.format(IP, PORT)
-        print url
-        self.s.bind(url)
+        self.s.bind(URL)
 
     def start_listener(self):
         print('ZMQ listener started')
@@ -249,7 +242,7 @@ class YubiGuard:
 
             old_id_l = new_id_l
 
-            time.sleep(.05)
+            time.sleep(.01)
 
     def unlock_keys(self, id_l):
         shell('; '.join(["xinput --enable {}".format(cs_id) for cs_id in id_l]))
@@ -266,38 +259,41 @@ class YubiGuard:
     def change_state(self):
         cs_is_l = []
         cs_signal = ''
-        init_locked = False
+        lock_done = False
 
         while True:
             # retrieve input from queues
             while self.id_q.qsize() > 0:
                 cs_is_l = self.id_q.get()
+                lock_done = False  # after any change deactivate again
 
             while self.on_q.qsize() > 0:
                 cs_signal = self.on_q.get()
 
             # unlock / lock:
-            if cs_is_l:
-                if cs_signal == EXIT_SIGNAL:
+            if cs_signal == EXIT_SIGNAL:
+                if cs_is_l:
                     print('Exiting gracefully and cleaning up:'),
                     self.unlock_keys(cs_is_l)
-                    sys.exit(0)
+                sys.exit(0)
 
-                elif cs_signal == ON_SIGNAL:
+            elif cs_is_l:
+                if cs_signal == ON_SIGNAL:
                     self.unlock_keys(cs_is_l)
 
                     mon_thread = Thread(target=self.yk_monitor, args=(cs_is_l,))
                     mon_thread.start()
                     mon_thread.join()
 
-                    self.lock_keys(cs_is_l)
-
-                    # putting in separator, nullifying all preceeding ON_SIGNALS to prevent possible over triggering:
+                    # putting in separator, nullifying all preceding ON_SIGNALS to prevent possible over-triggering:
                     self.on_q.put('')
 
-                elif not init_locked:  # initial disabling
+                    # setting loop up for deactivation
+                    lock_done = False
+
+                if not lock_done:  # initial disabling
                     self.lock_keys(cs_is_l)
-                    init_locked = True
+                    lock_done = True
 
             cs_signal = ''  # reset state to prevent continued unlocking/locking
             time.sleep(.001)
@@ -326,7 +322,14 @@ class YubiGuard:
             time.sleep(.001)
 
 
-# FIRING UP YUBIGUARD ---------------------------------------------------------------------------------------------------
+# FIRING UP YUBIGUARD --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    print("Starting YubiGuard.")
-    yg = YubiGuard()
+    if ('-t' or '--trigger') in sys.argv:
+        print("Sending ON_SIGNAL.")
+        context = zmq.Context()
+        zmq_socket = context.socket(zmq.PUSH)
+        zmq_socket.connect(URL)
+        zmq_socket.send(ON_SIGNAL)
+    else:
+        print("Starting YubiGuard.")
+        yg = YubiGuard()
