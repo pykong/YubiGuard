@@ -1,8 +1,8 @@
 # YubiGuard
 
-Python script to protect from accidental triggering of YubiKeys on Linux.
+Python script to protect against accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.8
+Most recent version: 0.9
 
 
 ## Advantages over YubiSwitch:
@@ -19,11 +19,14 @@ Most recent version: 0.8
 ### Binding Key Code
 
 ### Requirements:
+- xinput (installed on most Linux distributions by default)
 - pyzmq
 
 ```
 sudo pip install pyzmq
 ```
+- gir1.2-gtk-3.0
+- gir1.2-appindicator3
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
@@ -42,18 +45,33 @@ sudo pip install pyzmq
 _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test <id>_.
 
 ## Tested on:
-### Linux Distributions:
+### Linux Distributions (all 64-bit):
 - Xubuntu 15.10 (Wily Werewolf)
 - Xubuntu 16.04 (Xenial Xerus)
+- Elementary OS 0.4
+- Fedora 24
+- Linux Mint 18 (Cinnamon)
+- Manjaro Linux 15.09
+- Ubuntu 16.04
+
+### Not working on (all 64-bit):
+- Debian 8.5 (Jessie)
+- OpenSUSE 42.1
+- Solus 1.2
+- Mageia 5
+
+(Those distros are not working as xinput is not installed: "xinput: command not found".
+One might get YubiGuard to run with additional work though.)
 
 ### YubiKey models:
 - YubiKey 4 Nano
+- YubiKey NEO
+- YubiKey II
 
-### Keyboard Layout:
-- German (QWERTZU)
-
-
-
+## Credits_
+- yubico generously provided additional YubiKey models for testing
+- Stefaan Lippens' asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
+stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 
 ## Changelog:
 ### v 0.2:
@@ -88,3 +106,7 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 - changed name back to YubiGuard, as two other GitHub projects are already titled YubiLock
 - updated icons
 - minor rectifivation of code
+
+### v 0.9
+- YubiGuard.py itself is now used for triggering, when run with comman line paramater '-t': yg_trigger.sh is deprecated therefore
+- fixed minor bug preventing exit when no keys were inserted
