@@ -4,6 +4,7 @@ Python script to protect against accidental triggering of YubiKeys on Linux.
 
 Most recent version: 0.9
 
+A predecessor called [YubiSwitch](https://github.com/gsstark/yubiswitch-for-linux) tried to solve the same problem, but came with major security flaws, was cumbersome to use and lacked several important features.
 
 ## Advantages over YubiSwitch:
 1. **No root privilege required to run!**
@@ -15,26 +16,31 @@ Most recent version: 0.9
 7. Panel indicator showing the activation status of YubiKey(s).
 
 ## Installation & Setup
-[...]
-### Binding Key Code
+1. Download zip archive here: [ZIP](https://github.com/bfelder/YubiGuard/zipball/master[)
+2. Extract files.
+3. Install dependencies.
+4. Run YubiGuard.py.
+5. Bind system key combination to the same file, but with **"-t"** as command line parameter.
+6. This key combinatin is used to unlock YubiKeys (See: Usage for further instructions.)
+
 
 ### Requirements:
 - xinput (installed on most Linux distributions by default)
+- gir1.2-gtk-3.0
+- gir1.2-appindicator3
 - pyzmq
 
 ```
 sudo pip install pyzmq
 ```
-- gir1.2-gtk-3.0
-- gir1.2-appindicator3
 
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
-- the locked state is indicated in the panel by the default icon.
-- simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.
-- in the unlocked state the icon changes to green.
-- after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default
-- while no YubiKeys are inserted, the panel indicator will be darkened.
+- The locked state is indicated in the panel by the default icon.
+- Simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.
+- In the unlocked state the icon changes to green.
+- After triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default.
+- While no YubiKeys are inserted, the panel indicator will be darkened.
 
 ## FAQ:
 **_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
@@ -46,6 +52,8 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 
 ## Tested on:
 ### Linux Distributions (all 64-bit):
+_(Only checked working of xinput command and correct panel indicator display so far.)_
+
 - Xubuntu 15.10 (Wily Werewolf)
 - Xubuntu 16.04 (Xenial Xerus)
 - Elementary OS 0.4
@@ -54,14 +62,16 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 - Manjaro Linux 15.09
 - Ubuntu 16.04
 
+
 ### Not working on (all 64-bit):
+_(Those distros are not working as xinput is not installed: "xinput: command not found".
+One might get YubiGuard to run with additional work though.)_
 - Debian 8.5 (Jessie)
 - OpenSUSE 42.1
 - Solus 1.2
 - Mageia 5
 
-(Those distros are not working as xinput is not installed: "xinput: command not found".
-One might get YubiGuard to run with additional work though.)
+
 
 ### YubiKey models:
 - YubiKey 4 Nano
@@ -69,7 +79,7 @@ One might get YubiGuard to run with additional work though.)
 - YubiKey II
 
 ## Credits:
-- yubico generously provided additional YubiKey models for testing
+- Yubico generously provided additional YubiKey models for testing.
 - Stefaan Lippens' asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
 stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 
