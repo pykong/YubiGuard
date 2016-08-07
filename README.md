@@ -68,7 +68,7 @@ One might get YubiGuard to run with additional work though.)
 - YubiKey NEO
 - YubiKey II
 
-## Credits_
+## Credits:
 - yubico generously provided additional YubiKey models for testing
 - Stefaan Lippens' asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
 stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
@@ -108,5 +108,5 @@ stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 - minor rectifivation of code
 
 ### v 0.9
-- YubiGuard.py itself is now used for triggering, when run with comman line paramater '-t': yg_trigger.sh is deprecated therefore
+- YubiGuard.py itself is now used for triggering, when run with command line paramater: '-t'. (yg_trigger.sh removed)
 - fixed minor bug preventing exit when no keys were inserted
