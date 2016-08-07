@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>YubiLock by bfelder</title>
+    <title>YubiGuard by bfelder</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -15,25 +15,27 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>YubiLock</h1>
+        <h1>YubiGuard</h1>
         <p>Python script to prevent accidental triggering of YubiKeys on Linux.</p>
 
-        <p class="view"><a href="https://github.com/bfelder/YubiLock">View the Project on GitHub <small>bfelder/YubiLock</small></a></p>
+        <p class="view"><a href="https://github.com/bfelder/YubiGuard">View the Project on GitHub <small>bfelder/YubiGuard</small></a></p>
 
 
         <ul>
-          <li><a href="https://github.com/bfelder/YubiLock/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/bfelder/YubiLock/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/bfelder/YubiLock">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/bfelder/YubiGuard/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bfelder/YubiGuard/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bfelder/YubiGuard">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
         <h1>
-<a id="yubilock" class="anchor" href="#yubilock" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YubiLock</h1>
+<a id="yubiguard" class="anchor" href="#yubiguard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YubiGuard</h1>
 
-<p>Python script to prevent accidental triggering of YubiKeys on Linux.</p>
+<p>Python script to protect against accidental triggering of YubiKeys on Linux.</p>
 
-<p>Most recent version: 0.7</p>
+<p>Most recent version: 0.9</p>
+
+<p>A predecessor called <a href="https://github.com/gsstark/yubiswitch-for-linux">YubiSwitch</a> tried to solve the same problem, but came with major security flaws, was cumbersome to use and lacked several important features.</p>
 
 <h2>
 <a id="advantages-over-yubiswitch" class="anchor" href="#advantages-over-yubiswitch" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advantages over YubiSwitch:</h2>
@@ -51,15 +53,23 @@
 <h2>
 <a id="installation--setup" class="anchor" href="#installation--setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation &amp; Setup</h2>
 
-<p>[...]</p>
-
-<h3>
-<a id="binding-key-code" class="anchor" href="#binding-key-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Binding Key Code</h3>
+<ol>
+<li>Download zip archive here: <a href="https://github.com/bfelder/YubiGuard/zipball/master%5B">ZIP</a>
+</li>
+<li>Extract files.</li>
+<li>Install dependencies.</li>
+<li>Run YubiGuard.py.</li>
+<li>Bind system key combination to the same file, but with <strong>"-t"</strong> as command line parameter.</li>
+<li>This key combinatin is used to unlock YubiKeys (See: Usage for further instructions.)</li>
+</ol>
 
 <h3>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements:</h3>
 
 <ul>
+<li>xinput (installed on most Linux distributions by default)</li>
+<li>gir1.2-gtk-3.0</li>
+<li>gir1.2-appindicator3</li>
 <li>pyzmq</li>
 </ul>
 
@@ -71,11 +81,11 @@
 
 <ul>
 <li>YubiLock locks output from all inserted YubiKeys by default.</li>
-<li>the locked state is indicated in the panel by the default icon.</li>
-<li>simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.</li>
-<li>in the unlocked state the icon changes to green.</li>
-<li>after triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default</li>
-<li>while no YubiKeys are inserted, the panel indicator will be darkened.</li>
+<li>The locked state is indicated in the panel by the default icon.</li>
+<li>Simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.</li>
+<li>In the unlocked state the icon changes to green.</li>
+<li>After triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default.</li>
+<li>While no YubiKeys are inserted, the panel indicator will be darkened.</li>
 </ul>
 
 <h2>
@@ -92,11 +102,31 @@
 <a id="tested-on" class="anchor" href="#tested-on" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tested on:</h2>
 
 <h3>
-<a id="linux-distributions" class="anchor" href="#linux-distributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linux Distributions:</h3>
+<a id="linux-distributions-all-64-bit" class="anchor" href="#linux-distributions-all-64-bit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linux Distributions (all 64-bit):</h3>
+
+<p><em>(Only checked working of xinput command and correct panel indicator display so far.)</em></p>
 
 <ul>
 <li>Xubuntu 15.10 (Wily Werewolf)</li>
 <li>Xubuntu 16.04 (Xenial Xerus)</li>
+<li>Elementary OS 0.4</li>
+<li>Fedora 24</li>
+<li>Linux Mint 18 (Cinnamon)</li>
+<li>Manjaro Linux 15.09</li>
+<li>Ubuntu 16.04</li>
+</ul>
+
+<h3>
+<a id="not-working-on-all-64-bit" class="anchor" href="#not-working-on-all-64-bit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Not working on (all 64-bit):</h3>
+
+<p><em>(Those distros are not working as xinput is not installed: "xinput: command not found".
+One might get YubiGuard to run with additional work though.)</em></p>
+
+<ul>
+<li>Debian 8.5 (Jessie)</li>
+<li>OpenSUSE 42.1</li>
+<li>Solus 1.2</li>
+<li>Mageia 5</li>
 </ul>
 
 <h3>
@@ -104,13 +134,17 @@
 
 <ul>
 <li>YubiKey 4 Nano</li>
+<li>YubiKey NEO</li>
+<li>YubiKey II</li>
 </ul>
 
-<h3>
-<a id="keyboard-layout" class="anchor" href="#keyboard-layout" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keyboard Layout:</h3>
+<h2>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits:</h2>
 
 <ul>
-<li>German (QWERTZU)</li>
+<li>Yubico generously provided additional YubiKey models for testing.</li>
+<li>Stefaan Lippens' asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
+stefaanlippens.net/python-asynchronous-subprocess-pipe-reading</li>
 </ul>
 
 <h2>
@@ -166,6 +200,23 @@
 
 <ul>
 <li>switched back from KeyEventListener to ZmqListener, as the former interfered with YubiKey release (see issue)</li>
+</ul>
+
+<h3>
+<a id="v-08" class="anchor" href="#v-08" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.8</h3>
+
+<ul>
+<li>changed name back to YubiGuard, as two other GitHub projects are already titled YubiLock</li>
+<li>updated icons</li>
+<li>minor rectifivation of code</li>
+</ul>
+
+<h3>
+<a id="v-09" class="anchor" href="#v-09" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>v 0.9</h3>
+
+<ul>
+<li>YubiGuard.py itself is now used for triggering, when run with command line paramater: '-t'. (yg_trigger.sh removed)</li>
+<li>fixed minor bug preventing exit when no keys were inserted</li>
 </ul>
       </section>
       <footer>
