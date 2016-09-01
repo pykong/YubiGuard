@@ -43,7 +43,7 @@ sudo pip install pyzmq
 - While no YubiKeys are inserted, the panel indicator will be darkened.
 
 ### Usage screen lock mode:
-- start YubiKey.py with -l as command line flag:
+- start YubiKey.py with **"-l"** as command line flag:
 ```
 ./YubiKey.py -l
 ```
