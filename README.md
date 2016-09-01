@@ -2,7 +2,7 @@
 
 Python script to protect against accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.9
+Most recent version: 0.9.1
 
 A predecessor called [YubiSwitch](https://github.com/gsstark/yubiswitch-for-linux) tried to solve the same problem, but came with major security flaws, was cumbersome to use and lacked several important features.
 
@@ -42,6 +42,13 @@ sudo pip install pyzmq
 - After triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default.
 - While no YubiKeys are inserted, the panel indicator will be darkened.
 
+### Usage screen lock mode:
+- start YubiKey.py with -l as command line flag:
+```
+./YubiKey.py -l
+```
+- removing a YubiKey will now immediately result in screen lock
+
 ## FAQ:
 **_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
 **_A:_** No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
@@ -53,7 +60,6 @@ _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test 
 ## Tested on:
 ### Linux Distributions (all 64-bit):
 _(Only checked working of xinput command and correct panel indicator display so far.)_
-
 - Xubuntu 15.10 (Wily Werewolf)
 - Xubuntu 16.04 (Xenial Xerus)
 - Elementary OS 0.4
@@ -61,7 +67,6 @@ _(Only checked working of xinput command and correct panel indicator display so 
 - Linux Mint 18 (Cinnamon)
 - Manjaro Linux 15.09
 - Ubuntu 16.04
-
 
 ### Not working on (all 64-bit):
 _(Those distros are not working as xinput is not installed: "xinput: command not found".
@@ -71,7 +76,8 @@ One might get YubiGuard to run with additional work though.)_
 - Solus 1.2
 - Mageia 5
 
-
+### Screen lock mode:
+- Xubuntu 16.04 (Xenial Xerus)
 
 ### YubiKey models:
 - YubiKey 4 Nano
@@ -120,3 +126,6 @@ stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 ### v 0.9
 - YubiGuard.py itself is now used for triggering, when run with command line paramater: '-t'. (yg_trigger.sh removed)
 - fixed minor bug preventing exit when no keys were inserted
+
+### v 0.9.1
+- introduced screen lock mode which will automatically lock your screen when removing a YubiKey (security feature)
