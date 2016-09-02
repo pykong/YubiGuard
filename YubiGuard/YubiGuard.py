@@ -367,7 +367,7 @@ class YubiGuard:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='YubiGuard help')
     parser.add_argument('-t', nargs='?', default="", help='activates YubiGuard.py as trigger')
-    parser.add_argument('-l', nargs='?', default="", help='lock screen if all YubiKey(s) are removed')
+    parser.add_argument('-l', nargs='?', default="", help='lock screen if any YubiKey is removed')
     args = parser.parse_args()
 
     if args.t is None:
