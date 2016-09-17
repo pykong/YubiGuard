@@ -129,3 +129,6 @@ stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 
 ### v 0.9.1
 - introduced screen lock mode which will automatically lock your screen when removing a YubiKey (security feature)
+
+### v 0.9.2
+- reduced internal cycle time to more reasonable settings to minimize CPU load
