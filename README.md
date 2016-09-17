@@ -2,7 +2,7 @@
 
 Python script to protect against accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.9.1
+Most recent version: 0.9.2
 
 A predecessor called [YubiSwitch](https://github.com/gsstark/yubiswitch-for-linux) tried to solve the same problem, but came with major security flaws, was cumbersome to use and lacked several important features.
 
