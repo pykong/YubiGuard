@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiGuard VERSION 0.9.1
+# YubiGuard VERSION 0.9.2
 # LICENSE: GNU General Public License v3.0
 # https://stackoverflow.com/questions/285716/trapping-second-keyboard-input-in-ubuntu-linux
 # shell command for pushing ZMQ: echo -e $(printf '\\x01\\x00\\x%02x\\x00%s' $((1 + ${#MSG})) "$MSG") | nc -q1 $IP $PORT
@@ -150,7 +150,7 @@ class PanelIndicator(object):
                     self.indicator.set_icon_full(os.path.abspath(OFF_ICON), "")
                 elif state == NOKEY_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(NOKEY_ICON), "")
-            time.sleep(.01)
+            time.sleep(.1)
 
 
 class ZmqListener(object):
@@ -168,7 +168,7 @@ class ZmqListener(object):
                 self.s.recv(zmq.NOBLOCK)  # note NOBLOCK here
             except zmq.Again:
                 # no message to recv, do other things
-                time.sleep(0.01)
+                time.sleep(0.05)
             else:
                 self.on_q.put(ON_SIGNAL)
 
@@ -274,7 +274,7 @@ class YubiGuard:
 
             old_id_l = new_id_l
 
-            time.sleep(.01)
+            time.sleep(.1)
 
     def turn_keys(self, id_l, lock=True):  # problem of value loss of cs_id_l found in this function
         tk_id_l = id_l
@@ -336,7 +336,7 @@ class YubiGuard:
                     self.turn_keys(cs_id_l, lock=True)
 
             cs_signal = ''  # reset state to prevent continued unlocking/locking
-            time.sleep(.001)
+            time.sleep(.01)
 
     def yk_monitor(self, mon_l):
         # forming command to run parallel monitoring processes
