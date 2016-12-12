@@ -112,6 +112,10 @@ class PanelIndicator(object):
     def build_menu(self):
         menu = Gtk.Menu()
 
+        item_unlock = Gtk.MenuItem('Unlock')
+        item_unlock.connect('activate', self.unlock)
+        menu.append(item_unlock)
+
         item_help = Gtk.MenuItem('Help')
         item_help.connect('activate', self.open_help)
         menu.append(item_help)
@@ -125,6 +129,10 @@ class PanelIndicator(object):
 
         menu.show_all()
         return menu
+
+    def unlock(self, *args):
+        # abspath is the own file name, we're executing ourselves with param -t (to unlock the yubikey)
+        subprocess.call(["/usr/bin/env", "python", abspath, "-t"])
 
     def open_help(self, *arg):
         help_cmd = "xdg-open {HELP_URL} || " \
