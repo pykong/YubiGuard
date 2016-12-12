@@ -112,10 +112,10 @@ class PanelIndicator(object):
     def build_menu(self):
         menu = Gtk.Menu()
 
-        item_quit = Gtk.MenuItem('Help')
-        item_quit.connect('activate', self.open_help)
+        item_help = Gtk.MenuItem('Help')
+        item_help.connect('activate', self.open_help)
 
-        menu.append(item_quit)
+        menu.append(item_help)
 
         separator = Gtk.SeparatorMenuItem()
         menu.append(separator)
