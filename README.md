@@ -37,7 +37,7 @@ sudo pip install pyzmq
 ## Usage:
 - YubiLock locks output from all inserted YubiKeys by default.
 - The locked state is indicated in the panel by the default icon.
-- Simply Triggering via key combination (e.g.: super + y) will unlock YubiKey.
+- Simply Triggering via key combination (e.g.: super + y) will unlock YubiKey. (_Here is a short explanation on how to change key bindings under Linux Mint: https://www.lifewire.com/how-to-change-the-linux-mint-cinnamon-keyboard-shortcuts-4064754_)
 - In the unlocked state the icon changes to green.
 - After triggering your YubiKey or after timeout, YubiKey will again be locked with the icon reverting back to default.
 - While no YubiKeys are inserted, the panel indicator will be darkened.
