@@ -114,7 +114,6 @@ class PanelIndicator(object):
 
         item_help = Gtk.MenuItem('Help')
         item_help.connect('activate', self.open_help)
-
         menu.append(item_help)
 
         separator = Gtk.SeparatorMenuItem()
