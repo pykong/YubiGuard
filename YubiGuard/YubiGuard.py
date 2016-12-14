@@ -89,7 +89,7 @@ class PanelIndicator(object):
         self.indicator.set_menu(self.build_menu)
 
         self.pi_q = pi_q
-        self.on_q = on_q  # activate with: self.on_q.put(ON_SIGNAL)
+        self.on_q = on_q  
 
     def run_pi(self):
         # suppresses error: Couldn't connect to accessibility bus:
@@ -127,10 +127,7 @@ class PanelIndicator(object):
         return menu
 
     def unlock(self, *args):
-        context = zmq.Context()
-        zmq_socket = context.socket(zmq.PUSH)
-        zmq_socket.connect(URL)
-        zmq_socket.send(ON_SIGNAL)
+        self.on_q.put(ON_SIGNAL)
 
     def open_help(self, *arg):
         help_cmd = "xdg-open {HELP_URL} || " \
@@ -154,12 +151,15 @@ class PanelIndicator(object):
                 if state == ON_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(ON_ICON), "")
                     # activate unlock button
+                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, true)                   
                 elif state == OFF_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(OFF_ICON), "")
                     # deactivate unlock button
+                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, false)
                 elif state == NOKEY_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(NOKEY_ICON), "")
                     # deactivate unlock button
+                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, false)
                 
             time.sleep(.1)
 
