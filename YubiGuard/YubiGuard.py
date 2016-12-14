@@ -132,7 +132,11 @@ class PanelIndicator(object):
 
     def unlock(self, *args):
         # abspath is the own file name, we're executing ourselves with param -t (to unlock the yubikey)
-        subprocess.call(["/usr/bin/env", "python", abspath, "-t"])
+        print("Sending ON_SIGNAL.")
+        context = zmq.Context()
+        zmq_socket = context.socket(zmq.PUSH)
+        zmq_socket.connect(URL)
+        zmq_socket.send(ON_SIGNAL)
 
     def open_help(self, *arg):
         help_cmd = "xdg-open {HELP_URL} || " \
