@@ -131,8 +131,6 @@ class PanelIndicator(object):
         return menu
 
     def unlock(self, *args):
-        # abspath is the own file name, we're executing ourselves with param -t (to unlock the yubikey)
-        print("Sending ON_SIGNAL.")
         context = zmq.Context()
         zmq_socket = context.socket(zmq.PUSH)
         zmq_socket.connect(URL)
@@ -157,10 +155,13 @@ class PanelIndicator(object):
 
                 if state == ON_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(ON_ICON), "")
+                    # activate unlock button
                 elif state == OFF_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(OFF_ICON), "")
+                    # deactivate unlock button
                 elif state == NOKEY_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(NOKEY_ICON), "")
+                    # deactivate unlock button
             time.sleep(.1)
 
 
