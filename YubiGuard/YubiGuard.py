@@ -112,6 +112,7 @@ class PanelIndicator(object):
         item_unlock = Gtk.MenuItem('Unlock')
         item_unlock.connect('activate', self.unlock)
         menu.append(item_unlock)
+        self.item_unlock = item_unlock
 
         item_help = Gtk.MenuItem('Help')
         item_help.connect('activate', self.open_help)
@@ -152,15 +153,15 @@ class PanelIndicator(object):
                 if state == ON_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(ON_ICON), "")
                     # activate unlock button
-                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, true)                   
+                    self.item_unlock.set_sensitive(False)
                 elif state == OFF_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(OFF_ICON), "")
                     # deactivate unlock button
-                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, false)
+                    self.item_unlock.set_sensitive(True)
                 elif state == NOKEY_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(NOKEY_ICON), "")
                     # deactivate unlock button
-                    self.indicator.gtk_widget_set_sensitive(self.item_unlock, false)
+                    self.item_unlock.set_sensitive(True)
                 
             time.sleep(.1)
 
@@ -233,7 +234,7 @@ class YubiGuard:
         zmq_lis_thr = Thread(target=zmq_lis.start_listener)
         zmq_lis_thr.setDaemon(True)
 
-        pi = PanelIndicator(self.pi_q)
+        pi = PanelIndicator(self.pi_q, self.on_q)
 
         # starting processes and catching exceptions:
         try:
