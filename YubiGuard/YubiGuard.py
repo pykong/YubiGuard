@@ -17,13 +17,12 @@ from multiprocessing.queues import Queue
 from threading import Thread
 
 import gi.repository
-gi.require_version('Gtk', '3.0')
-gi.require_version('AppIndicator3', '0.1')
-
 import zmq
 from gi.repository import AppIndicator3 as AppIndicator
 from gi.repository import Gtk
 
+gi.require_version('Gtk', '3.0')
+gi.require_version('AppIndicator3', '0.1')
 
 # change working dir to that of script:
 abspath = os.path.abspath(__file__)
@@ -86,11 +85,12 @@ class PanelIndicator(object):
         self.indicator = AppIndicator.Indicator.new(
             APPINDICATOR_ID, os.path.abspath(NOKEY_ICON),
             AppIndicator.IndicatorCategory.SYSTEM_SERVICES)
+
         self.indicator.set_status(AppIndicator.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.build_menu)
 
         self.pi_q = pi_q
-        self.on_q = on_q  
+        self.on_q = on_q
 
     def run_pi(self):
         # suppresses error: Couldn't connect to accessibility bus:
@@ -113,6 +113,7 @@ class PanelIndicator(object):
         item_unlock.connect('activate', self.unlock)
         menu.append(item_unlock)
         self.item_unlock = item_unlock
+        self.item_unlock.set_sensitive(False)  # default state
 
         item_help = Gtk.MenuItem('Help')
         item_help.connect('activate', self.open_help)
@@ -159,10 +160,11 @@ class PanelIndicator(object):
                     # deactivate unlock button
                     self.item_unlock.set_sensitive(True)
                 elif state == NOKEY_SIGNAL:
-                    self.indicator.set_icon_full(os.path.abspath(NOKEY_ICON), "")
+                    self.indicator.set_icon_full(
+                        os.path.abspath(NOKEY_ICON), "")
                     # deactivate unlock button
-                    self.item_unlock.set_sensitive(True)
-                
+                    self.item_unlock.set_sensitive(False)
+
             time.sleep(.1)
 
 
