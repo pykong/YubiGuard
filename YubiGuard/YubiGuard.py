@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# YubiGuard VERSION 0.9.3
+# YubiGuard VERSION 0.9.4
 # LICENSE: GNU General Public License v3.0
 # shell command for pushing ZMQ:
 # echo -e $(printf '\\x01\\x00\\x%02x\\x00%s' $((1 + ${#MSG})) "$MSG")
