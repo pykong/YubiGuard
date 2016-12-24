@@ -2,7 +2,7 @@
 
 Python script to protect against accidental triggering of YubiKeys on Linux.
 
-Most recent version: 0.9.2
+Most recent version: 0.9.3
 
 A predecessor called [YubiSwitch](https://github.com/gsstark/yubiswitch-for-linux) tried to solve the same problem, but came with major security flaws, was cumbersome to use and lacked several important features.
 
@@ -132,3 +132,7 @@ stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 
 ### v 0.9.2
 - reduced internal cycle time to more reasonable settings to minimize CPU load
+
+### v 0.9.3
+- minor code cleanup
+- added unlock button to Menu
