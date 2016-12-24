@@ -85,11 +85,12 @@ class PanelIndicator(object):
         self.indicator = AppIndicator.Indicator.new(
             APPINDICATOR_ID, os.path.abspath(NOKEY_ICON),
             AppIndicator.IndicatorCategory.SYSTEM_SERVICES)
+
         self.indicator.set_status(AppIndicator.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.build_menu)
 
         self.pi_q = pi_q
-        self.on_q = on_q  # activate with: self.on_q.put(ON_SIGNAL)
+        self.on_q = on_q
 
     def run_pi(self):
         # suppresses error: Couldn't connect to accessibility bus:
@@ -108,6 +109,12 @@ class PanelIndicator(object):
     def build_menu(self):
         menu = Gtk.Menu()
 
+        item_unlock = Gtk.MenuItem('Unlock')
+        item_unlock.connect('activate', self.unlock)
+        menu.append(item_unlock)
+        self.item_unlock = item_unlock
+        self.item_unlock.set_sensitive(False)  # default state
+
         item_help = Gtk.MenuItem('Help')
         item_help.connect('activate', self.open_help)
         menu.append(item_help)
@@ -121,6 +128,9 @@ class PanelIndicator(object):
 
         menu.show_all()
         return menu
+
+    def unlock(self, *args):
+        self.on_q.put(ON_SIGNAL)
 
     def open_help(self, *arg):
         help_cmd = "xdg-open {HELP_URL} || " \
@@ -143,11 +153,18 @@ class PanelIndicator(object):
 
                 if state == ON_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(ON_ICON), "")
+                    # activate unlock button
+                    self.item_unlock.set_sensitive(False)
                 elif state == OFF_SIGNAL:
                     self.indicator.set_icon_full(os.path.abspath(OFF_ICON), "")
+                    # deactivate unlock button
+                    self.item_unlock.set_sensitive(True)
                 elif state == NOKEY_SIGNAL:
                     self.indicator.set_icon_full(
                         os.path.abspath(NOKEY_ICON), "")
+                    # deactivate unlock button
+                    self.item_unlock.set_sensitive(False)
+
             time.sleep(.1)
 
 
@@ -219,7 +236,7 @@ class YubiGuard:
         zmq_lis_thr = Thread(target=zmq_lis.start_listener)
         zmq_lis_thr.setDaemon(True)
 
-        pi = PanelIndicator(self.pi_q)
+        pi = PanelIndicator(self.pi_q, self.on_q)
 
         # starting processes and catching exceptions:
         try:
