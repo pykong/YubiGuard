@@ -86,9 +86,10 @@ One might get YubiGuard to run with additional work though.)_
 - YubiKey II
 
 ## Credits:
-- Yubico generously provided additional YubiKey models for testing.
-- Stefaan Lippens' asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
+- **Yubico company** generously provided additional YubiKey models for testing.
+- **Stefaan Lippens'** asynchronous stdout pipe allowed for an non-blocking way to monitor YubiKey output:
 stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
+- **mozfreddyb** provided the idea to add the unlock button in version 0.9.3 and also helped clean up parts of the code.
 
 ## Changelog:
 ### v 0.2:
