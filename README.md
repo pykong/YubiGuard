@@ -136,4 +136,4 @@ stefaanlippens.net/python-asynchronous-subprocess-pipe-reading
 
 ### v 0.9.3
 - minor code cleanup
-- added unlock button to Menu
+- added unlock button to Menu (kudos to **mozfreddyb** for initial idea and co-development)
