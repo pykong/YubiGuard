@@ -373,7 +373,7 @@ class YubiGuard:
             while stdout_queue.qsize() > 0:
                 stdout_queue.get()  # emptying queue
                 triggered = True
-                time.sleep(.01)
+                time.sleep(.04)
             if triggered:
                 print('YubiKey triggered. Now disabling.')
                 break
