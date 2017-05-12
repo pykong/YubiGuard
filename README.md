@@ -35,7 +35,7 @@ sudo pip install pyzmq
 ```
 
 ## Usage:
-- YubiLock locks output from all inserted YubiKeys by default.
+- YubiGuard locks output from all inserted YubiKeys by default.
 - The locked state is indicated in the panel by the default icon.
 - Simply Triggering via key combination (e.g.: super + y) will unlock YubiKey. (_Here is a short explanation on how to create key bindings under Linux Mint: https://www.lifewire.com/how-to-change-the-linux-mint-cinnamon-keyboard-shortcuts-4064754_) |
 Alternatively click the **PanelIcon**, then click **Unlock**.
@@ -44,9 +44,9 @@ Alternatively click the **PanelIcon**, then click **Unlock**.
 - While no YubiKeys are inserted, the panel indicator will be darkened.
 
 ### Usage screen lock mode:
-- start YubiKey.py with **"-l"** as command line flag:
+- start YubiGuard.py with **"-l"** as command line flag:
 ```
-./YubiKey.py -l
+./YubiGuard.py -l
 ```
 - removing a YubiKey will now immediately result in screen lock
 
@@ -54,8 +54,8 @@ Alternatively click the **PanelIcon**, then click **Unlock**.
 **_Q:_** The LED of my YubiKey is still active. Does this mean the script is not working?
 **_A:_** No. LEDs will continue to blink, despite YubiKey output being blocked as intended.
 
-**_Q:_** How does YubiLock actiavte and deactivate YubiKeys?
-**_A:_** YubiLock uses the xinput command to identify and control the output of YubiKeys. Namely:
+**_Q:_** How does YubiGuard activate and deactivate YubiKeys?
+**_A:_** YubiGuard uses the xinput command to identify and control the output of YubiKeys. Namely:
 _xinput list_, _xinput --enable <id>_, _xinput --disable <id>_ and _xinput test <id>_.
 
 ## Tested on:
