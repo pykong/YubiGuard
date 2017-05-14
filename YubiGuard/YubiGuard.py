@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # YubiGuard VERSION 0.9.3
 # LICENSE: GNU General Public License v3.0
