@@ -18,11 +18,12 @@ from threading import Thread
 
 import gi.repository
 import zmq
-from gi.repository import AppIndicator3 as AppIndicator
-from gi.repository import Gtk
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
+
+from gi.repository import AppIndicator3 as AppIndicator
+from gi.repository import Gtk
 
 # change working dir to that of script:
 abspath = os.path.abspath(__file__)
