@@ -76,6 +76,7 @@ One might get YubiGuard to run with additional work though.)_
 - OpenSUSE 42.1
 - Solus 1.2
 - Mageia 5
+- Fedora 26 ([likely due to switch from xinput to libinput](https://github.com/bfelder/YubiGuard/issues/11))
 
 ### Screen lock mode:
 - Xubuntu 16.04 (Xenial Xerus)
