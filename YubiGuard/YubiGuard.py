@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # YubiGuard VERSION 0.9.3
 # LICENSE: GNU General Public License v3.0
@@ -12,8 +12,7 @@ import re
 import subprocess
 import sys
 import time
-from multiprocessing import Process
-from multiprocessing.queues import Queue
+from multiprocessing import Process, Queue
 from threading import Thread
 
 import gi.repository
@@ -57,7 +56,7 @@ def shell_this(cmd):
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout = []
     while True:
-        line = p.stdout.readline()
+        line = p.stdout.readline().decode()
         stdout.append(line)
         # print line,
         if line == '' and p.poll() is not None:
@@ -110,20 +109,20 @@ class PanelIndicator(object):
     def build_menu(self):
         menu = Gtk.Menu()
 
-        item_unlock = Gtk.MenuItem('Unlock')
+        item_unlock = Gtk.MenuItem(label='Unlock')
         item_unlock.connect('activate', self.unlock)
         menu.append(item_unlock)
         self.item_unlock = item_unlock
         self.item_unlock.set_sensitive(False)  # default state
 
-        item_help = Gtk.MenuItem('Help')
+        item_help = Gtk.MenuItem(label='Help')
         item_help.connect('activate', self.open_help)
         menu.append(item_help)
 
         separator = Gtk.SeparatorMenuItem()
         menu.append(separator)
 
-        item_quit = Gtk.MenuItem('Quit')
+        item_quit = Gtk.MenuItem(label='Quit')
         item_quit.connect('activate', self.quit)
         menu.append(item_quit)
 
@@ -149,7 +148,7 @@ class PanelIndicator(object):
 
     def update_icon(self):
         while True:
-            if self.pi_q.qsize > 0:
+            if self.pi_q.qsize() > 0:
                 state = self.pi_q.get()
 
                 if state == ON_SIGNAL:
@@ -199,7 +198,6 @@ class AsynchronousFileReader(Thread):
     """
 
     def __init__(self, fd, queue):
-        assert isinstance(queue, Queue)
         assert callable(fd.readline)
         Thread.__init__(self)
         self._fd = fd
