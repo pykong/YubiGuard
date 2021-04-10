@@ -75,7 +75,7 @@ def get_scrlck_cmd():
         xfce='xflock4')
     sh_out = shell_this("ls /usr/bin/*session")
 
-    for k, v in cmd_d.iteritems():
+    for k, v in cmd_d.items():
         if k in sh_out:
             return v
 
